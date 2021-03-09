@@ -16,6 +16,6 @@ contract HasModifiers {
         require(_highestScore == 10);
         _;
     }
-
+    
 }
 
