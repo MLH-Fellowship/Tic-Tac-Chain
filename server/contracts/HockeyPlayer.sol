@@ -13,7 +13,7 @@ contract HockeyPlayers is HasModifiers{
     Player[2] public playersInGame;
 
     // creates a player and adds it to the playersInGame array
-    function createPlayer (address _playerAddress, uint bettedAmt) public hasEther() {
+    function createPlayer (address _playerAddress, uint _bettedAmt) public hasEther(_bettedAmt) {
 
     }
 }

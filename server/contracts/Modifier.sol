@@ -6,12 +6,14 @@ pragma solidity >=0.4.0 <0.9.0;
 contract HasModifiers {
 
     // asserts if the player has ether to bet
-    modifier hasEther () {
+    modifier hasEther (uint _bettedAmt) {
+        require(msg.sender.balance >= _bettedAmt);
         _;
     }
 
     // asserts if the game is over
-    modifier gameOver () {
+    modifier gameOver (uint _highestScore) {
+        require(_highestScore == 10);
         _;
     }
 
