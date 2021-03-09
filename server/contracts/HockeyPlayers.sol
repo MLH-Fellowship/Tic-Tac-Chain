@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.0 <0.9.0;
 
-import "./modifiers.sol";
+import "./Modifiers.sol";
 
 // Player generation and modification contracts will be handled here
 contract HockeyPlayers is HasModifiers{
@@ -12,10 +12,17 @@ contract HockeyPlayers is HasModifiers{
 
     Player[] public playersInGame;
 
+    // function to deduct betted amount at the time of game signup
+    function deductBet (uint _amount) public payable {
+        require(_amount == msg.value);
+        payable(address(this)).transfer(_amount);
+    }
+
     // creates a player and adds it to the playersInGame array
-    function createPlayer (address _playerAddress, uint _bettedAmt) public hasEther(_bettedAmt) {
+    function createPlayer (address _playerAddress, uint _bettedAmt) external hasEther(_bettedAmt) {
         require(playersInGame.length <= 2);
         Player memory player = Player(_playerAddress, _bettedAmt);
+        deductBet(player.bettedAmt);
         playersInGame.push(player);
     }
 
