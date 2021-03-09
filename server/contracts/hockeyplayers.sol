@@ -10,10 +10,14 @@ contract HockeyPlayers is HasModifiers{
         uint bettedAmt;  // amount that the player is betting
     } 
 
-    Player[2] public playersInGame;
+    Player[] public playersInGame;
 
     // creates a player and adds it to the playersInGame array
     function createPlayer (address _playerAddress, uint bettedAmt) public hasEther() {
+        Player memory player;
+        player=Player(_playerAddress,bettedAmt);
+        require(playersInGame.length<=2);
+        playersInGame.push(player);
 
     }
 }
