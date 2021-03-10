@@ -4,7 +4,7 @@ pragma solidity >=0.5.0 <0.9.0;
 import "./Modifiers.sol";
 
 // Player generation and modification contracts will be handled here
-contract HockeyPlayers is HasModifiers{
+contract GamePlayers is HasModifiers{
     struct Player {
         address playerAddress;  // player's unique address/wallet id
         uint bettedAmt;  // amount that the player is betting
