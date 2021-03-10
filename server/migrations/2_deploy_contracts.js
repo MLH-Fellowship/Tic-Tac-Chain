@@ -1,5 +1,5 @@
-const AirHockey = artifacts.require("AirHockey");
+const TicTacToe = artifacts.require("TicTacToe");
 
 module.exports = function (deployer) {
-  deployer.deploy(AirHockey);
+  deployer.deploy(TicTacToe);
 };

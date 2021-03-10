@@ -2,10 +2,10 @@
 pragma solidity >=0.5.0 <0.9.0;
 
 import "./Modifiers.sol";
-import "./HockeyPlayers.sol";
+import "./GamePlayers.sol";
 
 // The game logic will be implemented in this file
-contract AirHockey is HockeyPlayers {
+contract TicTacToe is GamePlayers {
     uint private totalBet;
 
     // function to get total betted amount and set it to totalBet
@@ -18,5 +18,5 @@ contract AirHockey is HockeyPlayers {
         address payable winnerAddress = address(uint160(playersInGame[_winnerIndex].playerAddress));
         winnerAddress.transfer(totalBet);
     }
-
+    
 }
