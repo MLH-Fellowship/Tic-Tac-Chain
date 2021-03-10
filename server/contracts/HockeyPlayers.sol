@@ -15,7 +15,8 @@ contract HockeyPlayers is HasModifiers{
     // function to deduct betted amount at the time of game signup
     function deductBet (uint _amount) public payable {
         require(_amount == msg.value);
-        payable(address(this)).transfer(_amount);
+        address payable thisContract = address(uint160(address(this)));
+        thisContract.transfer(_amount);
     }
 
     // creates a player and adds it to the playersInGame array

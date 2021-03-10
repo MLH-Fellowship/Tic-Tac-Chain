@@ -15,7 +15,8 @@ contract AirHockey is HockeyPlayers {
     
     // function to transfer total betted ether to winner's account
     function transferMoney (uint _winnerIndex) external payable{
-        payable(playersInGame[_winnerIndex].playerAddress).transfer(totalBet);
+        address payable winnerAddress = address(uint160(playersInGame[_winnerIndex].playerAddress));
+        winnerAddress.transfer(totalBet);
     }
 
 }
