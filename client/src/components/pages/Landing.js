@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import HomeButtons from '../functional/HomeButtons';
+import logo from './logo.png'
 
 
 class LandingPage extends Component {
