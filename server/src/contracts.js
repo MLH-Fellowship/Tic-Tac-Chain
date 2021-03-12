@@ -13,6 +13,7 @@ const ticTacToeAddress = "0xDD5C8F6000Dc509ACB4929627d2817aD76a097d7";
 
 function startApp() {
     ticTacToe = new web3js.eth.Contract(ticTacToeABI, ticTacToeAddress);
+    
 }
 
 
