@@ -1,12 +1,49 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.0 <0.9.0;
 
-import "./Modifiers.sol";
-import "./GamePlayers.sol";
 
 // The game logic will be implemented in this file
-contract TicTacToe is GamePlayers {
+contract TicTacToe{
+    
+    struct Player {
+        address playerAddress;  // player's unique address/wallet id
+        uint bettedAmt;  // amount that the player is betting
+    } 
+
+    // Declaring players 
+    Player[] public playersInGame;
+    
+    // Initialising the total bet amount
     uint private totalBet;
+
+    // asserts if the player has ether to bet
+    modifier hasEther (uint _bettedAmt) {
+        require(msg.sender.balance >= _bettedAmt);
+        _;
+    }
+
+    // asserts if the game is over
+    modifier gameOver (uint _highestScore) {
+        require(_highestScore == 10);
+        _;
+    }
+
+
+    // function to deduct betted amount at the time of game signup
+    function deductBet (uint _amount) public payable {
+        require(_amount == msg.value);
+        address payable thisContract = address(uint160(address(this)));
+        thisContract.transfer(_amount);
+    }
+
+    // creates a player and adds it to the playersInGame array
+    function createPlayer (address _playerAddress, uint _bettedAmt) external hasEther(_bettedAmt) {
+        require(playersInGame.length <= 2);
+        Player memory player = Player(_playerAddress, _bettedAmt);
+        deductBet(player.bettedAmt);
+        playersInGame.push(player);
+    }
+
 
     // function to get total betted amount and set it to totalBet
     function getTotalBet () public {
