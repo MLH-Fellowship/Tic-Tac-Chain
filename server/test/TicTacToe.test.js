@@ -29,24 +29,31 @@ contract('TicTacToe', ([accounts,player1,player2]) => {
 
     
     it('Creation of Player 1',async () => {
-        let result,player1_info;
-        const bettedAmt1=web3.utils.toWei('0.01', 'Ether');
+        let result;
+        const bettedAmt1=web3.utils.toWei('2', 'Ether');
         result=await tictactoe.createPlayer(bettedAmt1,{from: player1});
         console.log("player 1 created");
-        betAmt1=(await tictactoe.getAmount.call(0)).toString();
-        asserted.strictEqual(betAmt1,web3.utils.toWei('0.01','Ether','Betted Amount is not sucessfully Stored'))
 
     });
 
     it('Creation of Player 2',async () => {
-        let result,player2_info;
-        const bettedAmt2=web3.utils.toWei('0.01', 'Ether');
+        let result;
+        const bettedAmt2=web3.utils.toWei('2', 'Ether');
         result=await tictactoe.createPlayer(bettedAmt2,{from: player2});
         console.log("player 2 created");
+    });
+
+    it('Betted Amt Check',async()=>{
+        let betAmt1,betAmt2;
+        betAmt1=(await tictactoe.getAmount.call(0)).toString();
+        asserted.strictEqual(betAmt1,web3.utils.toWei('2','Ether'),'Betted Amount in player 1 is not sucessfully Stored');
         betAmt2=(await tictactoe.getAmount.call(1)).toString();
-        asserted.strictEqual(betAmt2,web3.utils.toWei('0.01','Ether','Betted Amount is not sucessfully Stored'))
+        asserted.strictEqual(betAmt2,web3.utils.toWei('2','Ether'),'Betted Amount in player 2 is not sucessfully Stored');
 
     });
 
+    it("Amount Deduct",async()=>{
+        result=await tictactoe.transferMoney(0);
+    });
 })
 })

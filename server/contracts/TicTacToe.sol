@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.5.0 <0.9.0;
+pragma solidity >=0.5.0;
 
 
 // The game logic will be implemented in this file
 contract TicTacToe{
     
     struct Player {
-        address playerAddress;  // player's unique address/wallet id
+        address payable playerAddress;  // player's unique address/wallet id
         uint bettedAmt;  // amount that the player is betting
     } 
 
@@ -43,19 +43,21 @@ contract TicTacToe{
         playersInGame.push(player);
     }
 
+    // Function to get the amount from the particular user
     function getAmount(uint i) public view returns (uint){
         return playersInGame[i].bettedAmt;
     }
 
 
     // function to get total betted amount and set it to totalBet
-    function getTotalBet () public {
-        totalBet=playersInGame[0].bettedAmt + playersInGame[1].bettedAmt;
+    function getTotalBet () public view returns (uint){
+        return playersInGame[0].bettedAmt + playersInGame[1].bettedAmt;
     }
     
     // function to transfer total betted ether to winner's account
-    function transferMoney (uint _winnerIndex) external payable{
-        address payable winnerAddress = address(uint160(playersInGame[_winnerIndex].playerAddress));
+    function transferMoney (uint _winnerIndex) payable external{
+        totalBet=getTotalBet();
+        address payable winnerAddress = playersInGame[_winnerIndex].playerAddress;
         winnerAddress.transfer(totalBet);
     }
     
