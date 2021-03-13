@@ -1,4 +1,4 @@
-import { randRoom } from "../../utilities/randRoom";
+const { randRoom } = require("../../utilities/randRoom");
 
 // Promise function to make sure, every time a new room is generated.
 const makeRoom = (rooms, resolve) => {
