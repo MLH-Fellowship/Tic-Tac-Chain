@@ -43,6 +43,10 @@ contract TicTacToe{
         playersInGame.push(player);
     }
 
+    function getAmount(uint i) public view returns (uint){
+        return playersInGame[i].bettedAmt;
+    }
+
 
     // function to get total betted amount and set it to totalBet
     function getTotalBet () public {

@@ -1,5 +1,8 @@
 // load the TicTacToe contract as an artifact
 const TicTacToe = artifacts.require("./TicTacToe.sol");
+var asserted = require('assert');
+
+
 
 contract('TicTacToe', ([accounts,player1,player2]) => {
     let tictactoe;
@@ -27,18 +30,23 @@ contract('TicTacToe', ([accounts,player1,player2]) => {
     
     it('Creation of Player 1',async () => {
         let result,player1_info;
-        const bettedAmt1=web3.utils.toWei('1', 'Ether');
+        const bettedAmt1=web3.utils.toWei('0.01', 'Ether');
         result=await tictactoe.createPlayer(bettedAmt1,{from: player1});
         console.log("player 1 created");
-
+        betAmt1=(await tictactoe.getAmount.call(0)).toString();
+        asserted.strictEqual(betAmt1,web3.utils.toWei('0.01','Ether','Betted Amount is not sucessfully Stored'))
 
     });
 
     it('Creation of Player 2',async () => {
         let result,player2_info;
-        const bettedAmt2=web3.utils.toWei('1', 'Ether');
+        const bettedAmt2=web3.utils.toWei('0.01', 'Ether');
         result=await tictactoe.createPlayer(bettedAmt2,{from: player2});
         console.log("player 2 created");
+        betAmt2=(await tictactoe.getAmount.call(1)).toString();
+        asserted.strictEqual(betAmt2,web3.utils.toWei('0.01','Ether','Betted Amount is not sucessfully Stored'))
+
     });
+
 })
 })
