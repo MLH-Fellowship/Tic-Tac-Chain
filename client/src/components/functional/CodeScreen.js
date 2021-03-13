@@ -8,6 +8,7 @@ const CodeScreenDisplay = (gameType, gameCode) =>{
                 <h3>Waiting for the other player to join...</h3>
                 <h3>Game Code</h3>
                 <div className="code-black">{gameCode}</div>
+                <div className="btn btn-copy-black" onClick={() => {navigator.clipboard.writeText(this.state.textToCopy)}}>Copy to Clipboard!</div>
             </div>
             )
     } else if (gameType=="free") {
@@ -17,6 +18,7 @@ const CodeScreenDisplay = (gameType, gameCode) =>{
                 <h3>Waiting for the other player to join...</h3>
                 <h3>Game Code</h3>
                 <div className="code-white">{gameCode}</div>
+                <div className="btn btn-copy-white" onClick={() => {navigator.clipboard.writeText(this.state.textToCopy)}}>Copy to Clipboard!</div>
             </div>
         )
     }
