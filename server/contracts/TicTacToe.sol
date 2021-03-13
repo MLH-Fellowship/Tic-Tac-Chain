@@ -37,10 +37,9 @@ contract TicTacToe{
     }
 
     // creates a player and adds it to the playersInGame array
-    function createPlayer (address _playerAddress, uint _bettedAmt) external hasEther(_bettedAmt) {
-        require(playersInGame.length <= 2);
-        Player memory player = Player(_playerAddress, _bettedAmt);
-        deductBet(player.bettedAmt);
+    function createPlayer (uint _bettedAmt) public {
+        Player memory player = Player(msg.sender, _bettedAmt);
+        // deductBet(player.bettedAmt);
         playersInGame.push(player);
     }
 
