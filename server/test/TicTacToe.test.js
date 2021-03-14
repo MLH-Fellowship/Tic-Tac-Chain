@@ -1,7 +1,10 @@
 // load the TicTacToe contract as an artifact
 const TicTacToe = artifacts.require("./TicTacToe.sol");
+var asserted = require('assert');
 
-contract('TicTacToe', (accounts) => {
+
+
+contract('TicTacToe', ([accounts,player1,player2]) => {
     let tictactoe;
 
     // before other code execute we need to deploy our airhockey contract
@@ -22,6 +25,7 @@ contract('TicTacToe', (accounts) => {
             // Test that check whether address is undefined or not
             assert.notEqual(address, undefined);
         }
-    )
+    );
+
 })
 })
