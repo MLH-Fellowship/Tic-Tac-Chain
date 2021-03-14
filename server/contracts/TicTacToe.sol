@@ -1,64 +1,62 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.5.0;
+pragma solidity >0.5.11;
 
 
 // The game logic will be implemented in this file
+
 contract TicTacToe{
+
+    // Storing the Room Id as Global
+
+    string public RoomID;
+
+    // Created a Mapping Game which maps from string to address array
+
+    mapping(string=>address[]) public Game;
     
-    struct Player {
-        address payable playerAddress;  // player's unique address/wallet id
-        uint bettedAmt;  // amount that the player is betting
-    } 
+    // Created Mapping BettAmt which maps from adddress to uint
+    // It maps from address of player to bet amount
 
-    // Declaring players 
-    Player[] public playersInGame;
-    
-    // Initialising the total bet amount
-    uint private totalBet;
+    mapping(address=>uint) public BettAmt;
 
-    // asserts if the player has ether to bet
-    modifier hasEther (uint _bettedAmt) {
-        require(msg.sender.balance >= _bettedAmt);
-        _;
-    }
+    // Function for Setting the Room Id
 
-    // asserts if the game is over
-    modifier gameOver (uint _highestScore) {
-        require(_highestScore == 10);
-        _;
-    }
-
-
-    // function to deduct betted amount at the time of game signup
-    function deductBet (uint _amount) public payable {
-        require(_amount == msg.value);
-        address payable thisContract = address(uint160(address(this)));
-        thisContract.transfer(_amount);
-    }
-
-    // creates a player and adds it to the playersInGame array
-    function createPlayer (uint _bettedAmt) public {
-        Player memory player = Player(msg.sender, _bettedAmt);
-        // deductBet(player.bettedAmt);
-        playersInGame.push(player);
-    }
-
-    // Function to get the amount from the particular user
-    function getAmount(uint i) public view returns (uint){
-        return playersInGame[i].bettedAmt;
-    }
-
-
-    // function to get total betted amount and set it to totalBet
-    function getTotalBet () public view returns (uint){
-        return playersInGame[0].bettedAmt + playersInGame[1].bettedAmt;
+    function setRoomID(string memory id) public{ 
+        RoomID=id;
     }
     
-    // function to transfer total betted ether to winner's account
-    function transferMoney (uint _winnerIndex) payable external{
-        totalBet=getTotalBet();
-        address payable winnerAddress = playersInGame[_winnerIndex].playerAddress;
-        winnerAddress.transfer(totalBet);
+    // Function which accept a payment from the user and creates a user
+
+    function createPlayer() external payable{
+        address sender = msg.sender;
+        uint betamount= msg.value;
+        Game[RoomID].push(sender);
+        BettAmt[sender]=betamount;
+    }
+
+    // Function to send the bet amount to the winner
+
+    function sendBetAmt(address payable winner,uint bettedAmt) public{
+        winner.transfer(bettedAmt);
     }
     
+    // Calculate the Total Bet Amount
+
+    function TotalBet() public view returns(uint) {
+        uint Bet0=BettAmt[Game[RoomID][0]];
+        uint Bet1=BettAmt[Game[RoomID][1]];
+        uint total=Bet0+Bet1;
+        return total;
+    }
+
+    // Function to take the winner index as input
+    // It calculates the Winner address and send total bet to the person
+    
+    function Winner(uint index) public{
+        address payable winner_address=address(uint160(Game[RoomID][index]));
+        uint totalBet=TotalBet();
+        sendBetAmt(winner_address, totalBet);
+
+    }
+
 }
