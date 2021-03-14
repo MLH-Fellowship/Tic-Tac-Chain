@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ChoiceButton from './ChoiceButton';
+import ChoiceButton from './ChoiceButtons';
 
 const GameChoice = ({heading, gameChoice, tagLine, onChoice}) =>{
     return (

@@ -16,3 +16,5 @@ class ChoiceScreen extends Component {
         )
     }
 }
+
+export default ChoiceScreen;
