@@ -1,40 +1,58 @@
 import React, {Component} from 'react';
+import { Redirect } from 'react-router';
 import HomeButtons from '../functional/HomeButtons';
-import logo from './logo.png'
+import Rules from '../functional/Rules';
+
+import logo from '../functional/icons/logo.png';
+
 
 
 class LandingPage extends Component {
     constructor(props){
         super(props)
         this.state = {
-            step: 1,
-            name: '',
-            playGame: null,
+            step: 0,
         }
-    }
-    
-    componentDidMount(){
-        // logic to be implemented
-    }
-
-
-    componentWillUnmount(){
-        // logic to be implemented
     }
 
     onChoice = (choice)=>{
-        const gameChoiceScreen = (choice==='play-game' ? true : false)  // checks if the choice was play-game or rules
-        const newState = {playGame: gameChoiceScreen}
-        this.setState(newState, ()=>{
-            this.stepForward()
-        })
+        if (choice === 'play-game') {
+            this.setState(
+                {step: 1} 
+            );
+        } else if (choice === 'rules'){
+            this.setState(
+                {step: 2}
+            )
+        } else {
+            this.setState(
+                {step: 0}
+            )
+        }
     }
 
+    
+    render(){ 
+        switch(this.state.step){
+            case(0):
+                return (
+                    <HomeButtons logo={logo} onChoice={this.onChoice}/>
+                );
+            
+            case(1):
+                return(
+                    <Redirect to='/type' />
+                );
 
-    render(){
-        return (
-            <HomeButtons logo={logo} onChoice={this.onChoice}/>
-        );
+            case(2):
+                return(
+                    <Rules onChoice={this.onChoice}/>
+                );
+
+            default:
+                return null;
+            
+        };    
     } 
 }
 
