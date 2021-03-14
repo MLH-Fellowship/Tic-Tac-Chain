@@ -12,6 +12,7 @@ class LandingPage extends Component {
         super(props)
         this.state = {
             step: 0,
+            code: ""
         }
     }
 
@@ -30,6 +31,11 @@ class LandingPage extends Component {
             )
         }
     }
+
+    onTyping(event) {
+        this.setState(
+          {code: event.target.value});
+      }
 
     
     render(){ 
