@@ -16,6 +16,29 @@ function startApp() {
     
 }
 
+function setRoomid(id){
+    ticTacToe.methods.setRoomID(id).send();
+}
+
+function createplayer1(){
+    ticTacToe.createPlayer({ from: web3.eth.accounts[0], 
+        value: web3.toWei("0.01","ether")}, 
+        function(err, result)
+        { revert(); 
+        });
+}
+
+function createplayer2(){
+    ticTacToe.createPlayer({ from: web3.eth.accounts[0], 
+        value: web3.toWei("0.01","ether")}, 
+        function(err, result)
+        { revert(); 
+        });
+}
+
+function sendBettoWinner(index){
+    ticTacToe.methods.Winner(index).send();
+}
 
 
 
