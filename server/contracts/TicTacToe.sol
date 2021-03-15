@@ -6,9 +6,8 @@ pragma solidity >0.5.11;
 
 contract TicTacToe{
 
-    // Storing the Room Id as Global
+    // Storing the commission as 5000 Wei
 
-    string public RoomID;
     uint commission=5000;
 
     // Created a Mapping Game which maps from string to address array
@@ -19,16 +18,10 @@ contract TicTacToe{
     // It maps from address of player to bet amount
 
     mapping(address=>uint) public BettAmt;
-
-    // Function for Setting the Room Id
-
-    function setRoomID(string memory id) public{ 
-        RoomID=id;
-    }
     
     // Function which accept a payment from the user and creates a user
 
-    function createPlayer() external payable{
+    function createPlayer(string memory RoomID) external payable{
         address sender = msg.sender;
         uint betamount= msg.value;
         Game[RoomID].push(sender);
@@ -43,7 +36,7 @@ contract TicTacToe{
     
     // Calculate the Total Bet Amount
 
-    function TotalBet() public view returns(uint) {
+    function TotalBet(string memory RoomID) public view returns(uint) {
         uint Bet0=BettAmt[Game[RoomID][0]]-commission;
         uint Bet1=BettAmt[Game[RoomID][1]]-commission;
         uint total=Bet0+Bet1;
@@ -53,9 +46,9 @@ contract TicTacToe{
     // Function to take the winner index as input
     // It calculates the Winner address and send total bet to the person
 
-    function Winner(uint index) public{
+    function Winner(string memory RoomID,uint index) public{
         address payable winner_address=address(uint160(Game[RoomID][index]));
-        uint totalBet=TotalBet();
+        uint totalBet=TotalBet(RoomID);
         sendBetAmt(winner_address, totalBet);
 
     }
@@ -67,7 +60,7 @@ contract TicTacToe{
     }
 
     // Function to send money to both players if it is draw game
-    function Draw() public{
+    function Draw(string memory RoomID) public{
 
         address payable player0_address=address(uint160(Game[RoomID][0]));
         uint bet0=getBet(Game[RoomID][0]);
