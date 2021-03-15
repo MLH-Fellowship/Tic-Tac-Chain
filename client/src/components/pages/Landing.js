@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Redirect } from 'react-router';
 import HomeButtons from '../functional/HomeButtons';
 import Rules from '../functional/Rules';
+import ChoiceScreen from './ChoiceScreen';
 
 import logo from '../functional/icons/logo.png';
 
@@ -47,7 +48,7 @@ class LandingPage extends Component {
             
             case(1):
                 return(
-                    <Redirect to='/type' />
+                    <ChoiceScreen />
                 );
 
             case(2):
