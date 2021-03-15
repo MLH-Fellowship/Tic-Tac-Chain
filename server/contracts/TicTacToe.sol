@@ -9,6 +9,7 @@ contract TicTacToe{
     // Storing the Room Id as Global
 
     string public RoomID;
+    uint commission=5000;
 
     // Created a Mapping Game which maps from string to address array
 
@@ -43,8 +44,8 @@ contract TicTacToe{
     // Calculate the Total Bet Amount
 
     function TotalBet() public view returns(uint) {
-        uint Bet0=BettAmt[Game[RoomID][0]];
-        uint Bet1=BettAmt[Game[RoomID][1]];
+        uint Bet0=BettAmt[Game[RoomID][0]]-commission;
+        uint Bet1=BettAmt[Game[RoomID][1]]-commission;
         uint total=Bet0+Bet1;
         return total;
     }
@@ -62,7 +63,7 @@ contract TicTacToe{
     // Function for Get Bet Amount By Address
 
     function getBet(address player) public view returns(uint){
-        return BettAmt[player];
+        return BettAmt[player]-commission;
     }
 
     // Function to send money to both players if it is draw game
