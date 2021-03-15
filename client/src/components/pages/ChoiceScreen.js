@@ -10,21 +10,20 @@ class ChoiceScreen extends Component {
         }
     }
 
-    freeHead = "Play For Free!";
-    freeTag = "Best mode for a quick game with friends!";
-
-    betHead = "Bet 0.001 Ether!";
-    betTag = "Win cryptocurrency the easy way!";
-
-    onButtonCLick(){
+    onButtonClick(){
         // enter the onChoice method
     }
 
     render(){
+        const freeHead = "Play For Free!";
+        const freeTag = "Best mode for a quick game with friends!";
+    
+        const betHead = "Bet 0.001 Ether!";
+        const betTag = "Win cryptocurrency the easy way!";
         return (
             <div>
-                <GameChoice gameType="free" heading={freeHead} tagLine={freeTag} onChoice={onButtonCLick}/>
-                <GameChoice gameType="bet" heading={betHead} tagLine={betTag} onChoice={onButtonCLick}/>
+                <GameChoice gameType="free" heading={freeHead} tagLine={freeTag} onChoice={()=>{this.onButtonClick()}}/>
+                <GameChoice gameType="bet" heading={betHead} tagLine={betTag} onChoice={()=>{this.onButtonClick()}}/>
             </div>
         )
     }
