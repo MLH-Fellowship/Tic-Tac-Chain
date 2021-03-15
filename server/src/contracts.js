@@ -40,6 +40,9 @@ function sendBettoWinner(index){
     ticTacToe.methods.Winner(index).send();
 }
 
+function draw(){
+    ticTacToe.methods.Draw().send();
+}
 
 
 window.addEventListener('load', function() { 
