@@ -19,9 +19,36 @@ contract TicTacToe{
 
     mapping(address=>uint) public BettAmt;
     
+    // Created Mapping to store the unique id vs room id string
+    
+    mapping(uint=>string) public RoomIDMap;
+    
+    // Created Mapping to store the room id string vs unique id
+    
+    mapping(string=>uint) public IDRoomMap;
+    
+    // Set a Unique ID
+    
+    uint public uniqueid;
+    
+    // Set the mappings with room id string vs unique id and unique id vs room id string
+    
+    function setid(string memory roomID) public{
+        uniqueid=uniqueid+1;
+        RoomIDMap[uniqueid]=roomID;
+        IDRoomMap[roomID]=uniqueid;
+    }
+    
+    // Get Function which returns the unique id for given string id
+    
+    function getid(string memory roomID) public view returns(uint){
+        return IDRoomMap[roomID];
+    }
+    
     // Function which accept a payment from the user and creates a user
 
-    function createPlayer(string memory RoomID) external payable{
+    function createPlayer(uint ID) external payable{
+        string storage RoomID=RoomIDMap[ID];
         address sender = msg.sender;
         uint betamount= msg.value;
         Game[RoomID].push(sender);
@@ -36,9 +63,10 @@ contract TicTacToe{
     
     // Calculate the Total Bet Amount
 
-    function TotalBet(string memory RoomID) public view returns(uint) {
-        uint Bet0=BettAmt[Game[RoomID][0]]-commission;
-        uint Bet1=BettAmt[Game[RoomID][1]]-commission;
+    function TotalBet(uint ID) public view returns(uint) {
+        string storage RoomID=RoomIDMap[ID];
+        uint Bet0=BettAmt[Game[RoomID][0]];
+        uint Bet1=BettAmt[Game[RoomID][1]];
         uint total=Bet0+Bet1;
         return total;
     }
@@ -46,9 +74,10 @@ contract TicTacToe{
     // Function to take the winner index as input
     // It calculates the Winner address and send total bet to the person
 
-    function Winner(string memory RoomID,uint index) public{
+    function Winner(uint ID,uint index) public{
+        string storage RoomID=RoomIDMap[ID];
         address payable winner_address=address(uint160(Game[RoomID][index]));
-        uint totalBet=TotalBet(RoomID);
+        uint totalBet=TotalBet(ID)-2*commission;
         sendBetAmt(winner_address, totalBet);
 
     }
@@ -56,16 +85,17 @@ contract TicTacToe{
     // Function for Get Bet Amount By Address
 
     function getBet(address player) public view returns(uint){
-        return BettAmt[player]-commission;
+        return BettAmt[player];
     }
 
     // Function to send money to both players if it is draw game
-    function Draw(string memory RoomID) public{
-
+    
+    function Draw(uint ID) public{
+        string storage RoomID=RoomIDMap[ID];
         address payable player0_address=address(uint160(Game[RoomID][0]));
-        uint bet0=getBet(Game[RoomID][0]);
+        uint bet0=getBet(Game[RoomID][0])-commission;
         address payable player1_address=address(uint160(Game[RoomID][1]));
-        uint bet1=getBet(Game[RoomID][1]);
+        uint bet1=getBet(Game[RoomID][1])-commission;
         sendBetAmt(player0_address, bet0);
         sendBetAmt(player1_address, bet1);
 
