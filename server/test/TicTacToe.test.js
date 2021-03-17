@@ -47,9 +47,26 @@ contract('TicTacToe', ([accounts,player1,player2]) => {
         // Creating a Player1 and Sending the Bet amount to store in the smart contract
 
         it('Creation of Player1 and Sending the Bet amount Successfully',async()=>{
-            const result=await tictactoe.createPlayer.sendTransaction(uniqueid,{ from: player1, 
-                value: web3.utils.toWei("0.01")});
-        })
+            const result=await tictactoe.createPlayer.sendTransaction(
+                uniqueid,
+                { from: player1, 
+                value: web3.utils.toWei("0.01")
+            });
+
+        });
+
+        
+        // Creating a Player2 and Sending the Bet amount to store in the smart contract
+
+        it('Creation of Player2 and Sending the Bet amount Successfully',async()=>{
+            const result=await tictactoe.createPlayer.sendTransaction(
+                uniqueid,
+                { from: player2, 
+                value: web3.utils.toWei("0.01")
+            });
+
+        });
+
 
 
 
