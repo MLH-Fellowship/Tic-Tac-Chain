@@ -67,8 +67,23 @@ contract('TicTacToe', ([accounts,player1,player2]) => {
 
         });
 
+        // Get Total Bet deposited by 2 players
+
+        var BetAmt;
+
+        it('Getting Total Bet',async()=>{
+            BetAmt=await tictactoe.TotalBet(uniqueid);
+        });
+
+        // Verifying the Total Bet Amount
+
+        it('Verify Total Bet',async()=>{
+            var betactual=web3.utils.toWei('0.02', 'ether');
+            asserted.equal(betactual,BetAmt.toString());
+        });
 
 
 
-})
-})
+});
+
+});
