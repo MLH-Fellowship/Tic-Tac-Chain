@@ -10,8 +10,14 @@ class ChoiceScreen extends Component {
         }
     }
 
-    onButtonClick(){
-        // enter the onChoice method
+    onButtonClick(bet){
+        if(bet === 0)  //free game
+        {
+
+        }
+        else{  //bet game
+
+        }
     }
 
     render(){
@@ -22,8 +28,18 @@ class ChoiceScreen extends Component {
         const betTag = "Win cryptocurrency the easy way!";
         return (
             <div>
-                <GameChoice gameType="free" heading={freeHead} tagLine={freeTag} onChoice={()=>{this.onButtonClick()}}/>
-                <GameChoice gameType="bet" heading={betHead} tagLine={betTag} onChoice={()=>{this.onButtonClick()}}/>
+                <GameChoice 
+                gameType="free"
+                heading={freeHead}
+                tagLine={freeTag} 
+                onChoice={()=>{this.onButtonClick(0)}}
+                />
+                <GameChoice 
+                gameType="bet" 
+                heading={betHead} 
+                tagLine={betTag} 
+                onChoice={()=>{this.onButtonClick(1)}}
+                />
             </div>
         )
     }

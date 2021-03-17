@@ -5,11 +5,14 @@ import LandingPage from './components/pages/Landing';
 import Board from './components/pages/Board';
 
 
-const Game = () => (
+const Game = () => {
+    return(
     <Router>
         <Route path='/' exact component={LandingPage} />
         <Route path='/game' component={Board} />
     </Router>
 )
+
+}
  
 export default Game
