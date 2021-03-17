@@ -34,9 +34,13 @@ contract TicTacToe{
     // Set the mappings with room id string vs unique id and unique id vs room id string
     
     function setid(string memory roomID) public{
-        uniqueid=uniqueid+1;
-        RoomIDMap[uniqueid]=roomID;
-        IDRoomMap[roomID]=uniqueid;
+        // If the room ID already exists in the mapping then it will not create a new one 
+        if(IDRoomMap[roomID]==0){
+            uniqueid=uniqueid+1;
+            RoomIDMap[uniqueid]=roomID;
+            IDRoomMap[roomID]=uniqueid;
+
+        }
     }
     
     // Get Function which returns the unique id for given string id
