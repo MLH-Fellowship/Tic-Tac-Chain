@@ -82,7 +82,11 @@ contract('TicTacToe', ([accounts,player1,player2]) => {
             asserted.equal(betactual,BetAmt.toString());
         });
 
+        // Tests for Sending Money to Player1
 
+        it('Sending Money to the Winner i.e Player 1',async()=>{
+            const result=await tictactoe.Winner(uniqueid,0);
+        })
 
 });
 
