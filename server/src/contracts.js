@@ -9,7 +9,9 @@ const ticTacToeABI = JSON.parse(fs.readFileSync('../build/contracts/TicTacToe.js
 
 // to get contract address on development, run truffle migrate -network deployment
 // make sure ganache is running on host: 127.0.0.1, port: 8545            
-const ticTacToeAddress = "0xDD5C8F6000Dc509ACB4929627d2817aD76a097d7";
+// const ticTacToeAddress = "0xDD5C8F6000Dc509ACB4929627d2817aD76a097d7";
+const ticTacToeAddress = "0x2A6e104047EDa13e73F77970A07768Be8552590a";
+
 
 function startApp() {
     ticTacToe = new web3js.eth.Contract(ticTacToeABI, ticTacToeAddress);
