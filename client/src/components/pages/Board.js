@@ -56,7 +56,7 @@ class Board extends Component{
     this.socket.on('restart', ({gameState, turn}) => this.handleRestart(gameState, turn))
   }
 
-  
+
   renderSquare=(i)=>{
         return(
           <Square key={i} 
@@ -71,19 +71,29 @@ class Board extends Component{
         /> 
         )
       }
-      
-      const squareArray = []
-      for (let i=0; i<9; i++){
-        const newSquare = renderSquare(i)
-        squareArray.push(newSquare)
+      render(){
+        if (this.state.joinError){
+          return(
+            <Redirect to={`/`} />
+          )
+        }else{
+          const squareArray = []
+          for (let i=0; i<9; i++){
+            const newSquare = this.renderSquare(i)
+            squareArray.push(newSquare)
+          }
+          return(
+            <>
+              <Wait display={this.state.waiting} room={this.state.room}/>
+              <Status message={this.state.statusMessage}/>
+              <div className="board">
+                {squareArray}
+              </div>
+              <ScoreBoard data={{player1:['You', this.state.currentPlayerScore], player2:[this.state.opponentPlayer[0], this.state.opponentPlayer[1]]}}/>
+              <PlayAgain end={this.state.end} onClick={this.playAgainRequest}/>
+            </>
+          )
+        }
       }
-      
-      return(
-        <>
-          <div className="board">
-            {squareArray}
-          </div>  
-        </>
-      )
 }
 export default Board;
