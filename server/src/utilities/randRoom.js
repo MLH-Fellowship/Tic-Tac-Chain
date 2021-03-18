@@ -4,6 +4,7 @@ const randRoom = () => {
     for (var i = 0; i < 16; i += 1) {
         result += hexChars[Math.floor(Math.random() * 16)];
     }
+    console.log(result)
     return result;
 }
 
