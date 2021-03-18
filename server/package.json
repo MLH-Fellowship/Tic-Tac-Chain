@@ -11,6 +11,7 @@
   "author": "Pod 2.1.1",
   "license": "ISC",
   "dependencies": {
+    "@truffle/hdwallet-provider": "^1.2.3",
     "assert": "^2.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
