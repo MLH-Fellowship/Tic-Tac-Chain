@@ -1,6 +1,7 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
-// import io from 'socket.io-client'
+
+import { Redirect } from "react-router-dom";
 
 class LandingPage extends React.Component {
   constructor(props) {
@@ -49,16 +50,17 @@ class LandingPage extends React.Component {
     this.socket.emit("newBetGame");
     console.log(this.state.room);
   };
-  JoinFreeGame = () => {
-
+  ChooseJoinFreeGame = () => {
+    this.setState({ step: 2 });
   };
-  JoinBetGame = () => {};
-
+  ChooseJoinBetGame = () => {
+    this.setState({ step: 3 });
+  };
+  JoiningBetGame = () => {};
+  JoiningFreeGame = () => {};
   render() {
     if (this.state.serverConfirmed) {
-      return (
-       <>Server is Created</>
-      );
+      return <Redirect to={`/game`} />;
     } else {
       switch (this.state.step) {
         case 0:
@@ -81,7 +83,7 @@ class LandingPage extends React.Component {
                 <button onClick={this.createFreeGame}>Start Game</button>
                 <br />
                 <br />
-                <button>Join Game</button>
+                <button onClick={this.ChooseJoinFreeGame}>Join Game</button>
               </div>
               <br />
               <br />
@@ -91,25 +93,43 @@ class LandingPage extends React.Component {
                 <button onClick={this.createBetGame}>Start Game</button>
                 <br />
                 <br />
-                <button>Join Game</button>
+                <button onClick={this.ChooseJoinBetGame}>Join Game</button>
               </div>
             </div>
           );
         case 2: //For Free Game Join
-            return(
-              <>
-                <h2>Free Game</h2>
-              </>
-            );
+          return (
+            <>
+              <h2>Free Game</h2>
+              Name:{" "}
+              <input value={this.state.name} type="textfield" label="name" />
+              <br />
+              <br />
+              Token{" "}
+              <input value={this.state.room} type="textfield" label="token" />
+              <br />
+              <br />
+              <button onClick={this.JoiningFreeGame}>Join Game</button>
+            </>
+          );
         case 3: //For Bet Game Join
-            return(
-              <>
-                <h2>Betting for 0.001 Ether</h2>
-              </>
-            )
-      }
+          return (
+            <>
+              <h2>Betting for 0.001 Ether</h2>
+              Name:{" "}
+              <input value={this.state.name} type="textfield" label="name" />
+              <br />
+              <br />
+              Token{" "}
+              <input value={this.state.room} type="textfield" label="token" />
+              <br />
+              <br />
+              <button onClick={this.JoiningBetGame}>Join Game</button>
+            </>
+          );
       }
     }
   }
+}
 
 export default LandingPage;
