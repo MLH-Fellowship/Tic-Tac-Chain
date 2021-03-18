@@ -33,6 +33,11 @@ class LandingPage extends React.Component {
       this.setState({ serverConfirmed: true, room: room });
       console.log(room);
     });
+     // Listening to Free Game Creation
+     this.socket.on("newBetGameCreated", (room) => {
+      this.setState({ serverConfirmed: true, room: room });
+      console.log(room);
+    });
     // When Join gets confirmed
     this.socket.on("joinConfirmed", () => {
       this.setState({ serverConfirmed: true });
