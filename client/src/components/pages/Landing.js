@@ -1,8 +1,10 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
-
 import { Redirect } from "react-router-dom";
-
+import ChoiceScreen from "./ChoiceScreen";
+import InputForm from "./../functional/InputForm";
+import Loading from "./../functional/Loading";
+import Error from "./../functional/Error";
 class LandingPage extends React.Component {
   constructor(props) {
     super(props);
@@ -30,37 +32,76 @@ class LandingPage extends React.Component {
       this.setState({ serverConfirmed: true, room: room });
       console.log(room);
     });
+    // When Join gets confirmed
+    this.socket.on("joinConfirmed", () => {
+      this.setState({ serverConfirmed: true });
+    });
+    // On Recieving Error 
+    this.socket.on('errorMessage', (message) => this.displayError(message))
   }
 
   stepUp = () => {
     this.setState({ step: this.state.step + 1 });
   };
+
+  stepBack = () => {
+    this.setState({ step: this.state.step - 1 });
+  };
+
+  displayError = (message) =>{
+    this.setState({error:true, errorMessage:message, loading:false})
+    setTimeout(()=>{
+        this.setState({error:false, errorMessage:''})
+    }, 3000)
+}
   toggleRules = () => {
     this.setState({ rules: !this.state.rules });
   };
-  createFreeGame = () => {
+  onTyping = (e) => {
+    const target = e.target.name;
+    const newState = { [target]: e.target.value };
+    this.setState(newState);
+  };
+
+  onChoice = (choice) => {
+    if (choice === "newFree") {
+      this.setState({ newGame: "newFree" });
+      this.stepUp();
+    }
+    if (choice === "newBet") {
+      this.setState({ newGame: "newBet" });
+      this.stepUp();
+    }
+    if (choice === "joinBet") {
+      this.setState({ newGame: "joinBet" });
+      this.stepUp();
+    }
+    if (choice === "joinFree") {
+      this.setState({ newGame: "joinFree" });
+      this.stepUp();
+    }
+  };
+  onSubmit = () => {
     this.setState({ loading: true });
-    console.log("FREE+Game");
-    this.socket.emit("newFreeGame");
-    console.log(this.state.room);
+    if (this.state.newGame === "newFree") {
+      this.socket.emit("newFreeGame");
+    } else if (this.state.newGame === "newBet") {
+      this.socket.emit("newBetGame");
+    } else if (this.state.newGame === "joinFree") {
+      this.socket.emit("joining", { room: this.state.room });
+      console.log("Room: ", this.state.room);
+    } else if (this.state.newGame === "joinBet") {
+      this.socket.emit("joining", { room: this.state.room });
+      console.log("Room: ", this.state.room);
+    } else {
+      console.error("Dont Change Game Params.");
+    }
   };
-  createBetGame = () => {
-    this.setState({ loading: true });
-    console.log("BET+Game");
-    this.socket.emit("newBetGame");
-    console.log(this.state.room);
-  };
-  ChooseJoinFreeGame = () => {
-    this.setState({ step: 2 });
-  };
-  ChooseJoinBetGame = () => {
-    this.setState({ step: 3 });
-  };
-  JoiningBetGame = () => {};
-  JoiningFreeGame = () => {};
   render() {
     if (this.state.serverConfirmed) {
-      return <Redirect to={`/game`} />;
+      return(
+        <Redirect to={`/game?room=${this.state.room}&name=${this.state.name}`} />
+    )
     } else {
       switch (this.state.step) {
         case 0:
@@ -75,58 +116,35 @@ class LandingPage extends React.Component {
               {!this.state.rules && <>The Rules Component Goes here</>}
             </>
           );
+
         case 1:
           return (
-            <div className="ChoiceScreen">
-              <div className="FreeGame">
-                <h2>Free Game</h2>
-                <button onClick={this.createFreeGame}>Start Game</button>
-                <br />
-                <br />
-                <button onClick={this.ChooseJoinFreeGame}>Join Game</button>
-              </div>
-              <br />
-              <br />
+            <>
+              <ChoiceScreen onChoice={this.onChoice} />
+            </>
+          );
+        case 2:
+          return (
+            <>
+              <Loading loading={this.state.loading} />
 
-              <div className="BetGame">
-                <h2>Bet Game</h2>
-                <button onClick={this.createBetGame}>Start Game</button>
-                <br />
-                <br />
-                <button onClick={this.ChooseJoinBetGame}>Join Game</button>
-              </div>
-            </div>
-          );
-        case 2: //For Free Game Join
-          return (
-            <>
-              <h2>Free Game</h2>
-              Name:{" "}
-              <input value={this.state.name} type="textfield" label="name" />
-              <br />
-              <br />
-              Token{" "}
-              <input value={this.state.room} type="textfield" label="token" />
-              <br />
-              <br />
-              <button onClick={this.JoiningFreeGame}>Join Game</button>
+              <Error
+                display={this.state.error}
+                message={this.state.errorMessage}
+              />
+
+              <InputForm
+                stepBack={this.stepBack}
+                onSubmit={this.onSubmit}
+                onTyping={this.onTyping.bind(this)}
+                newGame={this.state.newGame}
+                name={this.state.name}
+                room={this.state.room}
+              />
             </>
           );
-        case 3: //For Bet Game Join
-          return (
-            <>
-              <h2>Betting for 0.001 Ether</h2>
-              Name:{" "}
-              <input value={this.state.name} type="textfield" label="name" />
-              <br />
-              <br />
-              Token{" "}
-              <input value={this.state.room} type="textfield" label="token" />
-              <br />
-              <br />
-              <button onClick={this.JoiningBetGame}>Join Game</button>
-            </>
-          );
+
+       
       }
     }
   }

@@ -1,48 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
+import ChoiceButton from './../functional/ChoiceButtons'
 
-import GameChoice from '../functional/GameChoice';
-
-class ChoiceScreen extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            // enter required states
-        }
-    }
-
-    onButtonClick(bet){
-        if(bet === 0)  //free game
-        {
-
-        }
-        else{  //bet game
-
-        }
-    }
-
-    render(){
-        const freeHead = "Play For Free!";
-        const freeTag = "Best mode for a quick game with friends!";
-    
-        const betHead = "Bet 0.001 Ether!";
-        const betTag = "Win cryptocurrency the easy way!";
-        return (
-            <div>
-                <GameChoice 
-                gameType="free"
-                heading={freeHead}
-                tagLine={freeTag} 
-                onChoice={()=>{this.onButtonClick(0)}}
-                />
-                <GameChoice 
-                gameType="bet" 
-                heading={betHead} 
-                tagLine={betTag} 
-                onChoice={()=>{this.onButtonClick(1)}}
-                />
-            </div>
-        )
-    }
+const Choice = ({onChoice}) => {
+    return (
+        <>
+        <div className='choice-container'>
+    <h1>FREE GAME</h1>
+            <ChoiceButton onChoice={onChoice} type='primary' choice='newFree' label='Start New'/> 
+            <ChoiceButton onChoice={onChoice} type='secondary' choice='joinFree' label='Join Game'/> 
+        </div>
+        <br/><br/>
+        <div className='choice-container'>
+      <h1>Bet 0.001 ETH Game</h1>
+            <ChoiceButton onChoice={onChoice} type='primary' choice='newBet' label='Start New'/> 
+            <ChoiceButton onChoice={onChoice} type='secondary' choice='joinBet' label='Join Game'/> 
+        </div>
+        </>
+    );
 }
 
-export default ChoiceScreen;
+export default Choice;
