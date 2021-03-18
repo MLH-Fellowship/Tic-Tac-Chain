@@ -28,8 +28,8 @@ app.get("/", (req, res) => res.send(`Live socket running at ${PORT}`));
 
 //Assign x o values to each of the player class
 function pieceAssignment(room){
-  const firstPiece = randPiece()
-  const lastPiece = firstPiece === 'X'? 'O':'X'
+  const firstPiece = 'X' //CRAZY HACK BY @ksdkamesh99
+  const lastPiece = 'O' //CRAZY HACK BY @ksdkamesh99
 
   currentRoom = rooms.get(room)
   currentRoom.players[0].piece = firstPiece
@@ -50,12 +50,15 @@ io.on("connection", (socket) => {
     if (room_created) socket.emit("newFreeGameCreated", room_created);
   });
 
+
+
+
   //Bet Game Client Submit Event
   socket.on("newBetGame", () => {
     console.log("Bet");
     const room_created = makeRoom(rooms, 1);
     console.log(room_created);
-    if (room_created) socket.emit("newFreeGameCreated", room_created);
+    if (room_created) socket.emit("newBetGameCreated", room_created);
   });
 
   // Join Game
@@ -142,6 +145,26 @@ socket.on('playAgainRequest', (room) => {
 
     io.to(room).emit('restart', {gameState:currentRoom.board.game, turn:currentRoom.board.turn})
 })
+
+//Winning And Web3Integration Goes.
+socket.on("playerwins",(piece)=>{
+  console.log("Socket Listened",piece)
+  if(piece==='X')
+  {
+    console.log("Player 1 Wins")
+    //Player 1 Wins ( index : 0 wins)
+    //Do the Web3Integration Here
+  }
+  if(piece==='O')
+  {
+    console.log("Player 2 Wins")
+    //Player 2 Wins ( index : 1 wins)
+    //Do the Web3Integration here.
+  }
+})
+
+
+
 
 //On disconnect event
 socket.on('disconnecting', ()=> {

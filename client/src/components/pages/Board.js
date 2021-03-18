@@ -25,10 +25,14 @@ class Board extends Component {
       opponentPlayer: [],
       //State to check when a new user join
       waiting: false,
-      joinError: false
+      joinError: false,
+      //timer clock
+      timer:false,
+      minutes: 10,
+      seconds: 0,
     }
     this.socketID = null
-  }
+  } 
 
   componentDidMount() {
     //Getting the room and the username information from the url
@@ -47,7 +51,7 @@ class Board extends Component {
       this.setState({waiting:false})
       this.gameStart(gameState, players, turn)
     })
-    this.socket.on('joinError', () =>{alert("Room is Full");this.setState({joinError: true})})
+    this.socket.on('joinError', () =>{this.setState({joinError: true})})
 
     //Listening to the assignment of piece store the piece along with the in state
     //socket id in local socketID variable
@@ -62,6 +66,7 @@ class Board extends Component {
     this.socket.on('draw', ({gameState}) => this.handleDraw(gameState))
 
     this.socket.on('restart', ({gameState, turn}) => this.handleRestart(gameState, turn))
+
   }
 
   //Setting the states to start a game when new user join
@@ -71,6 +76,8 @@ class Board extends Component {
     this.setBoard(gameState)
     this.setTurn(turn)
     this.setMessage()
+    this.setState({timer:true})
+    this.countdown()
   }
 
   //When some one make a move, emit the event to the back end for handling
@@ -100,13 +107,23 @@ class Board extends Component {
       opponent[1] = opponentScore
       this.setState({opponentPlayer:opponent, statusMessage:`${this.state.opponentPlayer[0]} Wins`})
     }
+    if(this.state.currentPlayerScore>=1)
+    {
+      console.log("sending Winner Detail")
+      this.sendTheWinnerDetails()
+    }
     this.setState({end:true})
   }
 
   //Setting the states when there is a draw at the end
   handleDraw(gameState){
     this.setBoard(gameState)
-    this.setState({end:true, statusMessage:'Draw'})
+    if(!(this.state.minutes==='0' && this.state.seconds===0)) 
+    {
+      this.playAgainRequest();
+    }
+    else{
+    this.setState({end:true, statusMessage:'Draw'})}
   }
 
   playAgainRequest = () => {
@@ -122,6 +139,37 @@ class Board extends Component {
   }
 
   //Some utilities methods to set the states of the board
+ countdown(){
+   if(this.state.timer)
+        setInterval(() => {
+          const { seconds, minutes } = this.state
+
+          if (seconds > 0) {
+              this.setState(({ seconds }) => ({
+                  seconds: seconds - 1
+              }))
+          }
+          if (seconds === 0) {
+              if (minutes === 0) {
+                  //game_end_logic on timer is complete
+                  clearInterval(this.myInterval)
+                  this.sendTheWinnerDetails()
+              } else {
+                  this.setState(({ minutes }) => ({
+                      minutes: minutes - 1,
+                      seconds: 59
+                  }))
+              }
+          } 
+      }, 1000)
+ }
+
+  sendTheWinnerDetails()
+  {
+        this.socket.emit("playerwins",this.state.piece)
+        console.log("Winner Details Sent")
+  }
+
 
   setMessage(){
     const message = this.state.turn?'Your Turn':`${this.state.opponentPlayer[0]}'s Turn`
@@ -152,6 +200,8 @@ class Board extends Component {
   }
 
   render(){
+  
+
     if (this.state.joinError){
       return(
         <Redirect to={`/`} />
@@ -166,12 +216,17 @@ class Board extends Component {
         <>
           <Wait display={this.state.waiting} room={this.state.room}/>
           <Status message={this.state.statusMessage}/>
+          { this.state.minutes === 0 && this.state.seconds === 0
+                    ? <h1>Game Over</h1>
+                    : <h1>Time Remaining: {this.state.minutes}:{this.state.seconds < 10 ? `0${this.state.seconds}` : this.state.seconds}</h1>
+                }
           <div className="board">
             {squareArray}
           </div>
           <ScoreBoard data={{player1:['You', this.state.currentPlayerScore], player2:[this.state.opponentPlayer[0], this.state.opponentPlayer[1]]}}/>
           <PlayAgain end={this.state.end} onClick={this.playAgainRequest}/>
         </>
+        
       )
     }
   }
