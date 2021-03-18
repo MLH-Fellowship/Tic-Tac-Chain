@@ -5,6 +5,7 @@ import ChoiceScreen from "./ChoiceScreen";
 import InputForm from "./../functional/InputForm";
 import Loading from "./../functional/Loading";
 import Error from "./../functional/Error";
+import Rules from './../functional/Rules'
 class LandingPage extends React.Component {
   constructor(props) {
     super(props);
@@ -113,7 +114,7 @@ class LandingPage extends React.Component {
               <button onClick={this.toggleRules}>Rules</button>
               <br />
               <br />
-              {!this.state.rules && <>The Rules Component Goes here</>}
+              {!this.state.rules && <><Rules/>e</>}
             </>
           );
 
