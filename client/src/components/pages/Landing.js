@@ -105,8 +105,11 @@ class LandingPage extends React.Component {
   };
   render() {
     if (this.state.serverConfirmed) {
+      var bet=false;
+      if(this.state.newGame==='joinBet' || this.state.newGame==='newBet')
+      bet=true;
       return(
-        <Redirect to={`/game?room=${this.state.room}&name=${this.state.name}`} />
+        <Redirect to={`/game?room=${this.state.room}&name=${this.state.name}&bet=${bet}`} />
     )
     } else {
       switch (this.state.step) {
