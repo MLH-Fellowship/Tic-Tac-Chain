@@ -6,6 +6,7 @@ import InputForm from "./../functional/InputForm";
 import Loading from "./../functional/Loading";
 import Error from "./../functional/Error";
 import Rules from './../functional/Rules'
+import Logo from './logo.svg'
 class LandingPage extends React.Component {
   constructor(props) {
     super(props);
@@ -114,15 +115,20 @@ class LandingPage extends React.Component {
     } else {
       switch (this.state.step) {
         case 0:
-          return (
-            <>
-              <button onClick={this.stepUp}>Play Game</button>
+          return (<>
+                    <center><img src={Logo}/><br/><br/></center>
+                    <center><h4>An Easy way to earn Ethers</h4></center><br/><br/>
+                    <center> <div className="LandingPage">
+    
+              <button className="PlayGameButton" onClick={this.stepUp}> <span>Play Game</span></button>
               <br />
               <br />
-              <button onClick={this.toggleRules}>Rules</button>
+              <button className="PlayGameButton"   onClick={this.toggleRules}><span>Rules</span></button>
               <br />
               <br />
-              {!this.state.rules && <><Rules/>e</>}
+            
+            </div></center><br/><br/>
+            {!this.state.rules && <div className="rulesBox"><Rules/></div>}
             </>
           );
 

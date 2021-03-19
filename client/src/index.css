@@ -14,6 +14,54 @@
 
 
 
+.rulesBox{
+  z-index: 5;
+  position: absolute;
+}
+
+.PlayGameButton{
+  cursor:pointer;
+  display: block;
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 18px;
+  font-family: sans-serif;
+  text-decoration: none;
+  color: #333;
+  border: 2px solid #333;
+  letter-spacing: 2px;
+  text-align: center;
+  position: relative;
+  transition: all .35s;
+}
+
+.PlayGameButton span{
+  position: relative;
+  z-index: 2;
+}
+
+.PlayGameButton:after{
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #ff003b;
+  transition: all .35s;
+}
+
+.PlayGameButton:hover{
+  color: #fff;
+}
+
+.PlayGameButton:hover:after{
+  width: 100%;
+}
+
+
+
 body{
   display: flex;
   height: 100vh;
@@ -21,7 +69,7 @@ body{
   align-items: center;
   justify-content: center;
   background: var(--dark-blue);
-  background: linear-gradient(180deg, var(--dark-blue) 80%, var(--mid-blue) 100%);
+  background: linear-gradient(90deg, #FFAD4E 0%, #FF00D6 100%);
   background-repeat: no-repeat;
   overflow: none;
 }
@@ -129,14 +177,94 @@ img{
 }
 
 .btn-primary{
-  background: var(--mid-blue);
+  cursor:pointer;
+  display: block;
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 18px;
+  font-family: sans-serif;
+  text-decoration: none;
+  color: #333;
+  border: 2px solid #333;
+  letter-spacing: 2px;
+  text-align: center;
+  position: relative;
+  transition: all .35s;
+}
+.btn-primary span{
+  position: relative;
+  z-index: 5;
+}
+
+.btn-primary:after{
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #3955BA;
+  transition: all .35s;
+}
+
+.btn-primary:hover{
   color: #fff;
 }
 
-.btn-secondary{
-  background: var(--light-blue);
-  color: var(--mid-blue);
+.btn-primary:hover:after{
+  width: 100%;
 }
+
+
+
+
+
+
+
+
+
+.btn-secondary{
+  cursor:pointer;
+  display: block;
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 18px;
+  font-family: sans-serif;
+  text-decoration: none;
+  color: #333;
+  border: 2px solid #333;
+  letter-spacing: 2px;
+  text-align: center;
+  position: relative;
+  transition: all .35s;
+}
+
+.btn-secondary span{
+  position: relative;
+  z-index: 5;
+}
+
+.btn-secondary:after{
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #ff003b;
+  transition: all .35s;
+}
+
+.btn-secondary:hover{
+  color: #fff;
+}
+
+.btn-secondary:hover:after{
+  width: 100%;
+}
+
 
 
 input{
