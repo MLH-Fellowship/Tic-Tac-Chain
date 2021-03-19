@@ -14,7 +14,8 @@ import Contract from 'web3-eth-contract';
 
 
 const ticTacToeABI = JSON.parse(JSON.stringify(data),'utf8').abi
-const ticTacToeAddress = "0x674BdA8650c79ae12de5983811dBEDE3Fc5827De";
+// const ticTacToeAddress = "0x674BdA8650c79ae12de5983811dBEDE3Fc5827De";
+const ticTacToeAddress = "0x433B4A7410C0f8A740e44Ea2BC2eddA45966b290"
 var ticTacToe;
 var unique_id=0;
 var accounts;
@@ -57,9 +58,10 @@ async componentWillMount() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
+      await window.web3.currentProvider.enable();
 
     } else if (window.web3) {
-      window.web3.currentProvider.enable();
+      await window.web3.currentProvider.enable();
       window.web3 = new Web3(window.web3.currentProvider);
     } else {
       window.alert(
@@ -70,24 +72,10 @@ async componentWillMount() {
  
 
   async setRoomid(id) {
-
-      await ticTacToe.methods.setid(id).send({from:accounts[0]});
-    //   const setidblock = ticTacToe.events.SetID(
-        
-    //   //   (err,result)=>{
-    //   //   if (err) {
-    //   //     console.log(err);
-    //   //     return;
-    //   //   }
-    //   //   // append details of result.args to UI
-    //   //   else {
-    //   //     console.log(result);
-    //   //   }
-    //   // }
-      
-    //   )
-    // console.log("SET ROOM ID ",setidblock)
-    }
+    const result=await ticTacToe.methods.setid(id);
+    console.log(result)
+    
+  }
 
 
   //   setRoomEvent.SetID().watch(function (err, result) {
