@@ -2,4 +2,4 @@
 
 
 ### Prerequisites 💻
-An Ethereum powered browser OR Browser having Metamask Extension.
+An Ethereum powered browser OR browser having Metamask browser extension.
