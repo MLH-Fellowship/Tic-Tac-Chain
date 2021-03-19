@@ -11,7 +11,8 @@ import data from "./../../smart_contracts/build/contracts/TicTacToe";
 import io from "socket.io-client";
 import qs from "qs";
 import Contract from "web3-eth-contract";
-
+import MetamaskBetScreen from '../functional/MetamaskBetConfirm'
+import MetamaskConfirmScreen from '../functional/MetamaskRoomConfirm'
 const ticTacToeABI = JSON.parse(JSON.stringify(data), "utf8").abi;
 const ticTacToeAddress = "0xE43146ACcB08E83F6Db898D9f37927821ed48696";
 var ticTacToe;
@@ -41,7 +42,14 @@ class Board extends Component {
       seconds: 0,
 
       //keep track of draws
-      draw:0
+      draw:0,
+      joined:false,
+
+      //metamask states
+      confirmedRoom:false,
+      confirmedBet:false,
+      result_X:false,
+      result_O:false,
     };
     this.socketID = null;
   }
@@ -76,6 +84,7 @@ class Board extends Component {
     const account = (await web3.eth.getAccounts())[0];
     console.log(this.state.ticTacToe);
     const result = await this.state.ticTacToe.methods.setid(id).send({ from: account });
+
     console.log(result);
   }
 
@@ -96,45 +105,41 @@ class Board extends Component {
     return unique_id;
   }
 
-  createplayer1(id) {
-    ticTacToe.createPlayer(
-      id,
-      { from: Web3.eth.accounts[0], value: Web3.toWei("0.01", "ether") },
-      (err, result) => {
-        // Web3.revert();
-      }
-    );
+ async createplayer1(id) {
+  const web3=window.web3;
+  const account = (await web3.eth.getAccounts())[0];
+  console.log(this.state.ticTacToe);
+  return await this.state.ticTacToe.methods.createPlayer(id).send({from: account, value: 1000000000000000});
   }
 
-  createplayer2(id) {
-    ticTacToe.createPlayer(
-      id,
-      { from: Web3.eth.accounts[0], value: Web3.toWei("0.01", "ether") },
-      (err, result) => {
-        // Web3.revert();
-      }
-    );
+  async createplayer2(id) {
+    const web3=window.web3;
+    const account = (await web3.eth.getAccounts())[0];
+    return await this.state.ticTacToe.methods.createPlayer(id).send({from: account, value:1000000000000000});
   }
 
-  sendBettoWinner(id, index) {
-    ticTacToe.methods.Winner(id, index).send();
+  async sendBettoWinner(id, index) {
+    const web3=window.web3;
+    const account = (await web3.eth.getAccounts())[0];
+    return await this.state.ticTacToe.methods.Winner(id, index).send({from: account});
   }
 
-  draw(id) {
-    ticTacToe.methods.Draw(id).send();
+  async draw(id) {
+    const web3=window.web3;
+    const account = (await web3.eth.getAccounts())[0];
+    this.state.ticTacToe.methods.Draw(id).send({from: account});
   }
 
   componentDidMount() {
     //Getting the room and the username information from the url
     //Then emit to back end to process
     this.socket = io(ENDPOINT);
-    const { room, name, bet } = qs.parse(window.location.search, {
+    const { room, name, bet,joined } = qs.parse(window.location.search, {
       ignoreQueryPrefix: true,
     });
     this.setState({ room });
     this.setState({ bet: bet });
     this.socket.emit("newRoomJoin", { room, name });
-
     //New user join, logic decide on backend whether to display
     //the actual game or the wait screen or redirect back to the main page
     this.socket.on("waiting", async() => {
@@ -144,15 +149,49 @@ class Board extends Component {
         console.log("Room ID is set");
         console.log("GET UNIQUE ID");
         const result=await this.getuniqueid(this.state.room);
+        this.setState({blockchainRoom:result})
         console.log(result);
+        
+        if(result)
+        {
+          this.setState({confirmedRoom:true})
+          if(this.state.piece==='X')
+          {
+            const result_X=await this.createplayer1(result);
+            
+            this.setState({result_X:result_X.status})
+         
+          }
+
       
+        }
         this.setState({
         waiting: true,
         currentPlayerScore: 0,
         opponentPlayer: [],
       });
     });
-    this.socket.on("starting", ({ gameState, players, turn }) => {
+    this.socket.on("starting", async ({ gameState, players, turn }) => {
+
+      if(joined)
+      {
+        this.setState({joined:true})
+      const ticTacToe=await this.loadContract();
+      this.setState({ticTacToe});
+       const result= await this.getuniqueid(this.state.room)
+       if(result>0)
+       {
+        this.setState({confirmedRoom:true})
+        if(this.state.piece==='O')
+        {
+          const result_O=await this.createplayer2(result);
+          this.setState({result_O:result_O.status});
+        }
+
+       }
+      }
+
+
       this.setState({ waiting: false });
       this.gameStart(gameState, players, turn);
     });
@@ -207,7 +246,7 @@ class Board extends Component {
   }
 
   //Setting the states when some one wins
-  handleWin(id, gameState) {
+  async handleWin(id, gameState) {
     this.setBoard(gameState);
     if (this.socketID === id) {
       const playerScore = this.state.currentPlayerScore + 1;
@@ -233,6 +272,15 @@ class Board extends Component {
       this.setState({ end: true });
       this.setState({ timer: false });
       console.log(this.state.timer);
+      
+      if(this.state.currentPlayerScore>=1)
+      {
+          if(this.state.piece==='X')
+      {    await this.sendBettoWinner(this.state.blockchainRoom, 0)}
+
+          if(this.state.piece==='O')
+{          await this.sendBettoWinner(this.state.blockchainRoom, 1)}
+      }
     }
   }
 
@@ -347,6 +395,10 @@ class Board extends Component {
       }
       return (
         <>
+          <MetamaskConfirmScreen display={!(this.state.confirmedRoom)}/>
+        {this.state.piece==='X' && <MetamaskBetScreen display={!(this.state.result_X)}/>}
+        {this.state.piece==='O' && <MetamaskBetScreen display={!(this.state.result_O)}/>}
+          
           <Wait display={this.state.waiting} room={this.state.room} />
           <Status message={this.state.statusMessage} />
           {this.state.minutes === 0 && this.state.seconds === 0 ? (
