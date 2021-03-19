@@ -1,4 +1,4 @@
-{
+const data = {
   "contractName": "TicTacToe",
   "abi": [
     {
@@ -8984,3 +8984,5 @@
     "methods": {}
   }
 }
+
+module.exports = data

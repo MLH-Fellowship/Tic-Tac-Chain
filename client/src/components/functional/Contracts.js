@@ -1,7 +1,8 @@
 import React from 'react';
 import fs from 'fs';
 import Web3 from 'web3';
-const ticTacToeABI = JSON.parse(fs.readFileSync('../build/contracts/TicTacToe.json', 'utf8')).abi; 
+import data from './../../smart_contracts/build/contracts/TicTacToe'
+const ticTacToeABI = data.abi; 
 const ticTacToeAddress = "0xD64284a9D2D9B019C6384F04F22d38a50b94a378";
 
 class Contracts extends React.Component{
