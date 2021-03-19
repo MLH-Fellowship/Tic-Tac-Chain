@@ -13,9 +13,9 @@ import qs from 'qs'
 import Contract from 'web3-eth-contract';
 
 
-const ticTacToeABI = data.abi; 
+const ticTacToeABI = JSON.parse(JSON.stringify(data),'utf8').abi
 const ticTacToeAddress = "0xD64284a9D2D9B019C6384F04F22d38a50b94a378";
-var ticTacToe=''
+var ticTacToe;
 var unique_id=0;
 
 const ENDPOINT = "http://localhost:4000";
@@ -45,7 +45,8 @@ class Board extends Component {
 
 async componentWillMount() {
     await this.loadWeb3();
-    await this.startApp();
+    console.log(ticTacToeABI)
+    ticTacToe = await new Contract(ticTacToeABI, ticTacToeAddress);
   }
 
   async loadWeb3() {
@@ -60,23 +61,34 @@ async componentWillMount() {
       );
     }
   }
-  startApp() {
-    ticTacToe = new Contract(ticTacToeABI, ticTacToeAddress);
-  }
+ 
 
-  setRoomid(id) {
-    const setRoomEvent = ticTacToe.methods.setRoomID(id).send();
-    setRoomEvent.watch(function (err, result) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      // append details of result.args to UI
-      else {
-        console.log(result);
-      }
-    });
-  }
+  async setRoomid(id) {
+      const setRoomEvent = await ticTacToe.methods.setid(id);
+      console.log(setRoomEvent)
+      ticTacToe.events.SetID((err,result)=>{
+        if (err) {
+          console.log(err);
+          return;
+        }
+        // append details of result.args to UI
+        else {
+          console.log(result);
+        }
+      })}
+
+
+  //   setRoomEvent.SetID().watch(function (err, result) {
+  //     if (err) {
+  //       console.log(err);
+  //       return;
+  //     }
+  //     // append details of result.args to UI
+  //     else {
+  //       console.log(result);
+  //     }
+  //   });
+  // }
 
   async getuniqueid(id){
     unique_id=await ticTacToe.methods.getid(id);
@@ -123,7 +135,13 @@ async componentWillMount() {
 
     //New user join, logic decide on backend whether to display 
     //the actual game or the wait screen or redirect back to the main page
-    this.socket.on('waiting', ()=> this.setState({waiting:true, currentPlayerScore:0, opponentPlayer:[]}))
+    this.socket.on('waiting', ()=>{
+      this.setRoomid(this.state.room)
+      console.log("Room ID is set")
+
+      
+      this.setState({waiting:true, currentPlayerScore:0, opponentPlayer:[]})}
+      )
     this.socket.on('starting', ({gameState, players, turn})=> {
       this.setState({waiting:false})
       this.gameStart(gameState, players, turn)
@@ -141,7 +159,6 @@ async componentWillMount() {
     this.socket.on('update', ({gameState, turn}) => this.handleUpdate(gameState, turn))
     this.socket.on('winner', ({gameState,id}) => this.handleWin(id, gameState))
     this.socket.on('draw', ({gameState}) => this.handleDraw(gameState))
-
     this.socket.on('restart', ({gameState, turn}) => this.handleRestart(gameState, turn))
 
   }
