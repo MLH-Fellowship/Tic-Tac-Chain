@@ -16,7 +16,7 @@ const ticTacToeABI = JSON.parse(JSON.stringify(data), "utf8").abi;
 const ticTacToeAddress = "0xD64284a9D2D9B019C6384F04F22d38a50b94a378";
 var ticTacToe;
 var unique_id = 0;
-
+var accounts;
 const ENDPOINT = "http://localhost:4000";
 
 class Board extends Component {
@@ -50,13 +50,19 @@ class Board extends Component {
     await this.loadWeb3();
     console.log(ticTacToeABI);
     ticTacToe = await new Contract(ticTacToeABI, ticTacToeAddress);
+    accounts = await window.web3.eth.getAccounts()
+    console.log(accounts[0])
+
   }
 
   async loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
+      await window.web3.currentProvider.enable();
+
     } else if (window.web3) {
+      await window.web3.currentProvider.enable();
       window.web3 = new Web3(window.web3.currentProvider);
     } else {
       window.alert(

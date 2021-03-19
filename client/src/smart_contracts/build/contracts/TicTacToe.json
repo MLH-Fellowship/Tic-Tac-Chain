@@ -1,4 +1,4 @@
-const data = {
+{
   "contractName": "TicTacToe",
   "abi": [
     {
@@ -7701,9 +7701,23 @@ const data = {
     "name": "solc",
     "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0x674BdA8650c79ae12de5983811dBEDE3Fc5827De",
+      "transactionHash": "0x6b936f4cb98e69177b12638ea69c87ae82e4cbeb2d1b56469163fb3fe0c324ce"
+    },
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x433B4A7410C0f8A740e44Ea2BC2eddA45966b290",
+      "transactionHash": "0x91214cf4a7b3f1488c373b86128d03f572d35837f8c6db9eaf0f404bb91e444b"
+    }
+  },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-03-19T06:41:02.882Z",
+  "updatedAt": "2021-03-19T09:47:21.609Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },
@@ -7711,5 +7725,3 @@ const data = {
     "methods": {}
   }
 }
-
-module.exports = data

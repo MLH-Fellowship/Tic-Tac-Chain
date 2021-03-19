@@ -31,9 +31,9 @@ contract TicTacToe{
     
     uint private uniqueid;
 
-    event SetID(
-        bool status
-    );
+    // event SetID(
+    //     bool status
+    // );
     
     // Set the mappings with room id string vs unique id and unique id vs room id string
     
@@ -44,7 +44,7 @@ contract TicTacToe{
             RoomIDMap[uniqueid]=roomID;
             IDRoomMap[roomID]=uniqueid;
         }
-        emit SetID(true);
+        // emit SetID(true);
     }
     
     // Get Function which returns the unique id for given string id
@@ -53,11 +53,11 @@ contract TicTacToe{
         return IDRoomMap[roomID];
     }
 
-    event SuccessDeposit(
-        address sender,
-        uint betAmount,
-        string roomId
-    );
+    // event SuccessDeposit(
+    //     address sender,
+    //     uint betAmount,
+    //     string roomId
+    // );
     
     // Function which accept a payment from the user and creates a user
 
@@ -67,7 +67,7 @@ contract TicTacToe{
         uint betamount= msg.value;
         Game[RoomID].push(sender);
         BettAmt[sender]=betamount;
-        emit SuccessDeposit(sender, betamount, RoomID);
+        // emit SuccessDeposit(sender, betamount, RoomID);
     }
 
     // Function to send the bet amount to the winner
@@ -86,12 +86,12 @@ contract TicTacToe{
         return total;
     }
 
-    event GameWon(
-        address winner,
-        uint amount,
-        uint index
+    // event GameWon(
+    //     address winner,
+    //     uint amount,
+    //     uint index
 
-    );
+    // );
     // Function to take the winner index as input
     // It calculates the Winner address and send total bet to the person
 
@@ -100,7 +100,7 @@ contract TicTacToe{
         address payable winner_address=address(uint160(Game[RoomID][index]));
         uint totalBet=TotalBet(ID)-2*commission;
         sendBetAmt(winner_address, totalBet);
-        emit GameWon(winner_address, totalBet, index);
+        // emit GameWon(winner_address, totalBet, index);
 
 
     }
@@ -111,9 +111,9 @@ contract TicTacToe{
         return BettAmt[player];
     }
 
-    event GameDraw(
-        bool status
-    );
+    // event GameDraw(
+    //     bool status
+    // );
 
     // Function to send money to both players if it is draw game
     
@@ -125,7 +125,7 @@ contract TicTacToe{
         uint bet1=getBet(Game[RoomID][1])-commission;
         sendBetAmt(player0_address, bet0);
         sendBetAmt(player1_address, bet1);
-        emit GameDraw(true);
+        // emit GameDraw(true);
 
         
     }
