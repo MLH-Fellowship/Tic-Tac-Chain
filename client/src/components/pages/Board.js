@@ -11,6 +11,7 @@ import data from "./../../smart_contracts/build/contracts/TicTacToe";
 import io from "socket.io-client";
 import qs from "qs";
 import Contract from "web3-eth-contract";
+import MetamaskBetScreen from '../functional/MetamaskBetConfirm'
 import MetamaskConfirmScreen from '../functional/MetamaskRoomConfirm'
 const ticTacToeABI = JSON.parse(JSON.stringify(data), "utf8").abi;
 const ticTacToeAddress = "0xE43146ACcB08E83F6Db898D9f37927821ed48696";
@@ -46,7 +47,9 @@ class Board extends Component {
 
       //metamask states
       confirmedRoom:false,
-      confirmedBet:false
+      confirmedBet:false,
+      result_X:false,
+      result_O:false,
     };
     this.socketID = null;
   }
@@ -154,11 +157,13 @@ class Board extends Component {
           if(this.state.piece==='X')
           {
             const result_X=await this.createplayer1(result);
+            this.setState({result_X:result_X.status})
           }
 
           if(this.state.piece==='O')
           {
             const result_O=await this.createplayer2(result);
+            this.setState({result_X:result_O.status})
           }
         }
         this.setState({
@@ -364,6 +369,9 @@ class Board extends Component {
       return (
         <>
           <MetamaskConfirmScreen display={!(this.state.confirmedRoom)}/>
+        {this.state.piece==='X' && <MetamaskBetScreen display={!(this.state.result_X)}/>}
+        {this.state.piece==='O' && <MetamaskBetScreen display={!(this.state.result_O)}/>}
+          
           <Wait display={this.state.waiting} room={this.state.room} />
           <Status message={this.state.statusMessage} />
           {this.state.minutes === 0 && this.state.seconds === 0 ? (
