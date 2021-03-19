@@ -10,11 +10,14 @@ import Web3 from 'web3';
 import data from './../../smart_contracts/build/contracts/TicTacToe'
 import io from 'socket.io-client'
 import qs from 'qs'
+import Contract from 'web3-eth-contract';
 
 
 const ticTacToeABI = data.abi; 
 const ticTacToeAddress = "0xD64284a9D2D9B019C6384F04F22d38a50b94a378";
 var ticTacToe=''
+var unique_id=0;
+
 const ENDPOINT = "http://localhost:4000";
 
 class Board extends Component {
@@ -57,8 +60,8 @@ async componentWillMount() {
       );
     }
   }
-async startApp() {
-    ticTacToe = await new Web3.eth.Contract(ticTacToeABI, ticTacToeAddress);
+  startApp() {
+    ticTacToe = new Contract(ticTacToeABI, ticTacToeAddress);
   }
 
   setRoomid(id) {
@@ -73,6 +76,10 @@ async startApp() {
         console.log(result);
       }
     });
+  }
+
+  async getuniqueid(id){
+    unique_id=await ticTacToe.methods.getid(id);
   }
 
   createplayer1(id) {
