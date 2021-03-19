@@ -11,7 +11,7 @@ const Wait = ({ display}) => {
         <div className='wait' style={{display:display?'flex':'none'}}>
             <h1 className="wait-message">Blockchain Room is created.</h1>
             Please confirm to pay the bet amount.
-        <CircularProgress/>
+        <CircularProgress color="secondary"/>
         </div>
     );
 }
