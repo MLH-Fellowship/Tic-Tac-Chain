@@ -11,7 +11,7 @@ import data from "./../../smart_contracts/build/contracts/TicTacToe";
 import io from "socket.io-client";
 import qs from "qs";
 import Contract from "web3-eth-contract";
-
+import MetamaskConfirmScreen from '../functional/MetamaskRoomConfirm'
 const ticTacToeABI = JSON.parse(JSON.stringify(data), "utf8").abi;
 const ticTacToeAddress = "0xE43146ACcB08E83F6Db898D9f37927821ed48696";
 var ticTacToe;
@@ -41,7 +41,12 @@ class Board extends Component {
       seconds: 0,
 
       //keep track of draws
-      draw:0
+      draw:0,
+
+
+      //metamask states
+      confirmedRoom:false,
+      confirmedBet:false
     };
     this.socketID = null;
   }
@@ -76,6 +81,7 @@ class Board extends Component {
     const account = (await web3.eth.getAccounts())[0];
     console.log(this.state.ticTacToe);
     const result = await this.state.ticTacToe.methods.setid(id).send({ from: account });
+
     console.log(result);
   }
 
@@ -96,24 +102,18 @@ class Board extends Component {
     return unique_id;
   }
 
-  createplayer1(id) {
-    ticTacToe.createPlayer(
-      id,
-      { from: Web3.eth.accounts[0], value: Web3.toWei("0.01", "ether") },
-      (err, result) => {
-        // Web3.revert();
-      }
-    );
+ async createplayer1(id) {
+  const web3=window.web3;
+  const account = (await web3.eth.getAccounts())[0];
+  console.log(this.state.ticTacToe);
+  return await this.state.ticTacToe.createPlayer(id).send({from: account, value: Web3.toWei("0.01", "ether")});
   }
 
-  createplayer2(id) {
-    ticTacToe.createPlayer(
-      id,
-      { from: Web3.eth.accounts[0], value: Web3.toWei("0.01", "ether") },
-      (err, result) => {
-        // Web3.revert();
-      }
-    );
+  async createplayer2(id) {
+    const web3=window.web3;
+    const account = (await web3.eth.getAccounts())[0];
+    console.log(this.state.ticTacToe);
+    return await this.state.ticTacToe.createPlayer(id).send({from: account, value: Web3.toWei("0.01", "ether")});
   }
 
   sendBettoWinner(id, index) {
@@ -145,8 +145,16 @@ class Board extends Component {
         console.log("GET UNIQUE ID");
         const result=await this.getuniqueid(this.state.room);
         console.log(result);
-      
+        if(result)
+        {
+          this.setState({confirmedRoom:true})
+          if(this.state.piece==='X')
+          {
+            console.log("Kamesh Please Code from here")
+          }
+        }
         this.setState({
+        
         waiting: true,
         currentPlayerScore: 0,
         opponentPlayer: [],
@@ -347,6 +355,7 @@ class Board extends Component {
       }
       return (
         <>
+          <MetamaskConfirmScreen display={!(this.state.confirmedRoom)}/>
           <Wait display={this.state.waiting} room={this.state.room} />
           <Status message={this.state.statusMessage} />
           {this.state.minutes === 0 && this.state.seconds === 0 ? (
