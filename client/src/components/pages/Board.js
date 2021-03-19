@@ -54,8 +54,8 @@ class Board extends Component {
   }
 
   async loadContract(){
-    return await new Contract(ticTacToeABI, ticTacToeAddress);
-    
+    const web3 = window.web3;
+		return new web3.eth.Contract(ticTacToeABI, ticTacToeAddress);    
   }
 
   async loadWeb3() {
@@ -76,6 +76,7 @@ class Board extends Component {
     const account = (await web3.eth.getAccounts())[0];
     console.log(this.state.ticTacToe);
     const result = await this.state.ticTacToe.methods.setid(id).send({ from: account });
+    console.log(result);
   }
 
   //   setRoomEvent.SetID().watch(function (err, result) {
@@ -91,7 +92,7 @@ class Board extends Component {
   // }
 
   async getuniqueid(id) {
-    unique_id = await ticTacToe.methods.getid(id);
+    unique_id = await this.state.ticTacToe.methods.getid(id).call();
     return unique_id;
   }
 
@@ -136,17 +137,15 @@ class Board extends Component {
 
     //New user join, logic decide on backend whether to display
     //the actual game or the wait screen or redirect back to the main page
-    this.socket.on("waiting", () => {
+    this.socket.on("waiting", async() => {
       //  Runs when Room is a BET GAME
       console.log(this.state.bet);
       // if (this.state.bet === true) {
-        this.setRoomid(this.state.room);
+        await this.setRoomid(this.state.room);
         console.log("Room ID is set");
         console.log("GET UNIQUE ID");
-        this.getuniqueid(this.state.room)
-          .then((res) => console.log("GET UNIQUE ID is Successfull", res))
-          .catch((err) => console.error(err));
-      // }
+        const result=await this.getuniqueid(this.state.room);
+        console.log(result);
 
       this.setState({
         waiting: true,
