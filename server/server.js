@@ -59,7 +59,7 @@ io.on("connection", (socket) => {
     console.log("Bet");
     const room_created = makeRoom(rooms, 1);
     console.log(room_created);
-    setRoomid(room_created)
+    // setRoomid(room_created)
     if (room_created) socket.emit("newBetGameCreated", room_created);
   });
 
