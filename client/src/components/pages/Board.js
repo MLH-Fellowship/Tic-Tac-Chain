@@ -66,16 +66,22 @@ async componentWillMount() {
   async setRoomid(id) {
       const setRoomEvent = await ticTacToe.methods.setid(id);
       console.log(setRoomEvent)
-      ticTacToe.events.SetID((err,result)=>{
-        if (err) {
-          console.log(err);
-          return;
-        }
-        // append details of result.args to UI
-        else {
-          console.log(result);
-        }
-      })}
+      const setidblock = ticTacToe.events.SetID(
+        
+      //   (err,result)=>{
+      //   if (err) {
+      //     console.log(err);
+      //     return;
+      //   }
+      //   // append details of result.args to UI
+      //   else {
+      //     console.log(result);
+      //   }
+      // }
+      
+      )
+    console.log("SET ROOM ID ",setidblock)
+    }
 
 
   //   setRoomEvent.SetID().watch(function (err, result) {
@@ -92,6 +98,7 @@ async componentWillMount() {
 
   async getuniqueid(id){
     unique_id=await ticTacToe.methods.getid(id);
+    return unique_id
   }
 
   createplayer1(id) {
@@ -137,7 +144,13 @@ async componentWillMount() {
     //the actual game or the wait screen or redirect back to the main page
     this.socket.on('waiting', ()=>{
       this.setRoomid(this.state.room)
+     
+     
       console.log("Room ID is set")
+      console.log("GET UNIQUE ID");
+      this.getuniqueid(this.state.room).then((res)=>console.log("GET UNIQUE ID is Successfull",res)).catch(err=>console.error(err))
+    
+
 
       
       this.setState({waiting:true, currentPlayerScore:0, opponentPlayer:[]})}
