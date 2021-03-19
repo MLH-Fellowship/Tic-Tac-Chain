@@ -103,24 +103,7 @@ async startApp() {
     ticTacToe.methods.Draw(id).send();
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
   componentDidMount() {
     //Getting the room and the username information from the url
     //Then emit to back end to process
