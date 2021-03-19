@@ -140,14 +140,13 @@ class Board extends Component {
     this.socket.on("waiting", async() => {
       //  Runs when Room is a BET GAME
       console.log(this.state.bet);
-      // if (this.state.bet === true) {
         await this.setRoomid(this.state.room);
         console.log("Room ID is set");
         console.log("GET UNIQUE ID");
         const result=await this.getuniqueid(this.state.room);
         console.log(result);
-
-      this.setState({
+      
+        this.setState({
         waiting: true,
         currentPlayerScore: 0,
         opponentPlayer: [],
