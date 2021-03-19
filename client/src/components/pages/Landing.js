@@ -21,6 +21,7 @@ class LandingPage extends React.Component {
       error: false,
       errorMessage: "",
       rules: true,
+
     };
   }
   componentDidMount() {
@@ -99,18 +100,26 @@ class LandingPage extends React.Component {
       console.log("Room: ", this.state.room);
     } else if (this.state.newGame === "joinBet") {
       this.socket.emit("joining", { room: this.state.room });
+      
       console.log("Room: ", this.state.room);
     } else {
       console.error("Dont Change Game Params.");
     }
+
   };
   render() {
     if (this.state.serverConfirmed) {
       var bet=false;
+      var joiningPlayer=false
+
       if(this.state.newGame==='joinBet' || this.state.newGame==='newBet')
       bet=true;
+
+      if(this.state.newGame==='joinBet')
+      joiningPlayer=true
+
       return(
-        <Redirect to={`/game?room=${this.state.room}&name=${this.state.name}&bet=${bet}`} />
+        <Redirect to={`/game?room=${this.state.room}&name=${this.state.name}&bet=${bet}&joined=${joiningPlayer}`} />
     )
     } else {
       switch (this.state.step) {

@@ -43,7 +43,7 @@ class Board extends Component {
 
       //keep track of draws
       draw:0,
-
+      joined:false,
 
       //metamask states
       confirmedRoom:false,
@@ -134,13 +134,12 @@ class Board extends Component {
     //Getting the room and the username information from the url
     //Then emit to back end to process
     this.socket = io(ENDPOINT);
-    const { room, name, bet } = qs.parse(window.location.search, {
+    const { room, name, bet,joined } = qs.parse(window.location.search, {
       ignoreQueryPrefix: true,
     });
     this.setState({ room });
     this.setState({ bet: bet });
     this.socket.emit("newRoomJoin", { room, name });
-
     //New user join, logic decide on backend whether to display
     //the actual game or the wait screen or redirect back to the main page
     this.socket.on("waiting", async() => {
@@ -150,30 +149,49 @@ class Board extends Component {
         console.log("Room ID is set");
         console.log("GET UNIQUE ID");
         const result=await this.getuniqueid(this.state.room);
+        this.setState({blockchainRoom:result})
         console.log(result);
+        
         if(result)
         {
           this.setState({confirmedRoom:true})
           if(this.state.piece==='X')
           {
             const result_X=await this.createplayer1(result);
+            
             this.setState({result_X:result_X.status})
+         
           }
 
-          if(this.state.piece==='O')
-          {
-            const result_O=await this.createplayer2(result);
-            this.setState({result_X:result_O.status})
-          }
+      
         }
         this.setState({
-        
         waiting: true,
         currentPlayerScore: 0,
         opponentPlayer: [],
       });
     });
-    this.socket.on("starting", ({ gameState, players, turn }) => {
+    this.socket.on("starting", async ({ gameState, players, turn }) => {
+
+      if(joined)
+      {
+        this.setState({joined:true})
+      const ticTacToe=await this.loadContract();
+      this.setState({ticTacToe});
+       const result= await this.getuniqueid(this.state.room)
+       if(result>0)
+       {
+        this.setState({confirmedRoom:true})
+        if(this.state.piece==='O')
+        {
+          const result_O=await this.createplayer2(result);
+          this.setState({result_O:result_O.status});
+        }
+
+       }
+      }
+
+
       this.setState({ waiting: false });
       this.gameStart(gameState, players, turn);
     });
@@ -228,7 +246,7 @@ class Board extends Component {
   }
 
   //Setting the states when some one wins
-  handleWin(id, gameState) {
+  async handleWin(id, gameState) {
     this.setBoard(gameState);
     if (this.socketID === id) {
       const playerScore = this.state.currentPlayerScore + 1;
@@ -254,6 +272,15 @@ class Board extends Component {
       this.setState({ end: true });
       this.setState({ timer: false });
       console.log(this.state.timer);
+      
+      if(this.state.currentPlayerScore>=1)
+      {
+          if(this.state.piece==='X')
+      {    await this.sendBettoWinner(this.state.blockchainRoom, 0)}
+
+          if(this.state.piece==='O')
+{          await this.sendBettoWinner(this.state.blockchainRoom, 1)}
+      }
     }
   }
 
