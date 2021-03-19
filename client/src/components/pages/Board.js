@@ -19,6 +19,7 @@ const ticTacToeAddress = "0x433B4A7410C0f8A740e44Ea2BC2eddA45966b290"
 var ticTacToe;
 var unique_id=0;
 var accounts;
+var sender;
 
 const ENDPOINT = "http://localhost:4000";
 
@@ -50,7 +51,7 @@ async componentWillMount() {
     console.log(ticTacToeABI)
     ticTacToe = await new Contract(ticTacToeABI, ticTacToeAddress);
     accounts = await window.web3.eth.getAccounts()
-    console.log(accounts[0])
+    sender=accounts[0];
 
   }
 
@@ -58,10 +59,10 @@ async componentWillMount() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
-      await window.web3.currentProvider.enable();
+      // await window.web3.currentProvider.enable();
 
     } else if (window.web3) {
-      await window.web3.currentProvider.enable();
+      // await window.web3.currentProvider.enable();
       window.web3 = new Web3(window.web3.currentProvider);
     } else {
       window.alert(
@@ -72,6 +73,7 @@ async componentWillMount() {
  
 
   async setRoomid(id) {
+    console.log(ticTacToe.options.address);
     const result=await ticTacToe.methods.setid(id);
     console.log(result)
     
@@ -92,7 +94,7 @@ async componentWillMount() {
 
   async getuniqueid(id){
     unique_id=await ticTacToe.methods.getid(id);
-    return unique_id
+    return unique_id;
   }
 
   createplayer1(id) {
