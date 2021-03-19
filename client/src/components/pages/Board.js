@@ -106,22 +106,25 @@ class Board extends Component {
   const web3=window.web3;
   const account = (await web3.eth.getAccounts())[0];
   console.log(this.state.ticTacToe);
-  return await this.state.ticTacToe.createPlayer(id).send({from: account, value: Web3.toWei("0.01", "ether")});
+  return await this.state.ticTacToe.methods.createPlayer(id).send({from: account, value: 1000000000000000});
   }
 
   async createplayer2(id) {
     const web3=window.web3;
     const account = (await web3.eth.getAccounts())[0];
-    console.log(this.state.ticTacToe);
-    return await this.state.ticTacToe.createPlayer(id).send({from: account, value: Web3.toWei("0.01", "ether")});
+    return await this.state.ticTacToe.methods.createPlayer(id).send({from: account, value: Web3.toWei("0.01", "ether")});
   }
 
-  sendBettoWinner(id, index) {
-    ticTacToe.methods.Winner(id, index).send();
+  async sendBettoWinner(id, index) {
+    const web3=window.web3;
+    const account = (await web3.eth.getAccounts())[0];
+    return await this.state.ticTacToe.methods.Winner(id, index).send({from: account});
   }
 
-  draw(id) {
-    ticTacToe.methods.Draw(id).send();
+  async draw(id) {
+    const web3=window.web3;
+    const account = (await web3.eth.getAccounts())[0];
+    this.state.ticTacToe.methods.Draw(id).send({from: account});
   }
 
   componentDidMount() {
@@ -150,7 +153,12 @@ class Board extends Component {
           this.setState({confirmedRoom:true})
           if(this.state.piece==='X')
           {
-            console.log("Kamesh Please Code from here")
+            const result_X=await this.createplayer1(result);
+          }
+
+          if(this.state.piece==='O')
+          {
+            const result_O=await this.createplayer2(result);
           }
         }
         this.setState({
