@@ -13,15 +13,10 @@ import qs from "qs";
 import Contract from "web3-eth-contract";
 
 const ticTacToeABI = JSON.parse(JSON.stringify(data), "utf8").abi;
-const ticTacToeAddress = "0xD64284a9D2D9B019C6384F04F22d38a50b94a378";
+const ticTacToeAddress = "0xE43146ACcB08E83F6Db898D9f37927821ed48696";
 var ticTacToe;
 var unique_id = 0;
 var accounts;
-<<<<<<< HEAD
-var sender;
-
-=======
->>>>>>> 700c6db9908bdede4314d826833bb92532f5681d
 const ENDPOINT = "http://localhost:4000";
 
 class Board extends Component {
@@ -53,54 +48,34 @@ class Board extends Component {
 
   async componentWillMount() {
     await this.loadWeb3();
-    console.log(ticTacToeABI);
-    ticTacToe = await new Contract(ticTacToeABI, ticTacToeAddress);
-    accounts = await window.web3.eth.getAccounts()
-    sender=accounts[0];
+    const ticTacToe=await this.loadContract();
+    this.setState({ticTacToe});
 
+  }
+
+  async loadContract(){
+    return await new Contract(ticTacToeABI, ticTacToeAddress);
+    
   }
 
   async loadWeb3() {
     if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-      // await window.web3.currentProvider.enable();
+			window.web3 = new Web3(window.ethereum);
+			await window.ethereum.enable();
+		}
+		if (window.web3) {
+			window.web3 = new Web3(window.web3.currentProvider);
+		} else {
+			window.alert("please use metamask");
+		}
 
-    } else if (window.web3) {
-      // await window.web3.currentProvider.enable();
-      window.web3 = new Web3(window.web3.currentProvider);
-    } else {
-      window.alert(
-        "Non-Ethereum browser detected. You should consider trying MetaMask!"
-      );
-    }
   }
 
   async setRoomid(id) {
-<<<<<<< HEAD
-    console.log(ticTacToe.options.address);
-    const result=await ticTacToe.methods.setid(id);
-    console.log(result)
-    
-=======
-    const setRoomEvent = await ticTacToe.methods.setid(id);
-    console.log(setRoomEvent);
-    const setidblock = ticTacToe.events
-      .SetID
-
-      //   (err,result)=>{
-      //   if (err) {
-      //     console.log(err);
-      //     return;
-      //   }
-      //   // append details of result.args to UI
-      //   else {
-      //     console.log(result);
-      //   }
-      // }
-      ();
-    console.log("SET ROOM ID ", setidblock);
->>>>>>> 700c6db9908bdede4314d826833bb92532f5681d
+    const web3=window.web3;
+    const account = (await web3.eth.getAccounts())[0];
+    console.log(this.state.ticTacToe);
+    const result = await this.state.ticTacToe.methods.setid(id).send({ from: account });
   }
 
   //   setRoomEvent.SetID().watch(function (err, result) {
@@ -115,13 +90,8 @@ class Board extends Component {
   //   });
   // }
 
-<<<<<<< HEAD
-  async getuniqueid(id){
-    unique_id=await ticTacToe.methods.getid(id);
-=======
   async getuniqueid(id) {
     unique_id = await ticTacToe.methods.getid(id);
->>>>>>> 700c6db9908bdede4314d826833bb92532f5681d
     return unique_id;
   }
 
@@ -169,14 +139,14 @@ class Board extends Component {
     this.socket.on("waiting", () => {
       //  Runs when Room is a BET GAME
       console.log(this.state.bet);
-      if (this.state.bet === true) {
+      // if (this.state.bet === true) {
         this.setRoomid(this.state.room);
         console.log("Room ID is set");
         console.log("GET UNIQUE ID");
         this.getuniqueid(this.state.room)
           .then((res) => console.log("GET UNIQUE ID is Successfull", res))
           .catch((err) => console.error(err));
-      }
+      // }
 
       this.setState({
         waiting: true,
