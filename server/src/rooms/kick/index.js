@@ -3,4 +3,4 @@ function kick(room,rooms){
     currentRoom = rooms.get(room)
     currentRoom.players.pop()
 }
-module.exports={kick}
+module.exports= kick
