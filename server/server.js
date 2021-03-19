@@ -1,5 +1,6 @@
 const { makeRoom, joinRoom, kick, getRoomPlayersNum } = require("./src/rooms");
 const { randPiece } = require("./src/utilities/randRoom");
+const {setRoomid, createplayer1, createplayer2, sendBettoWinner, draw}=require('./src/contracts');
 const Player = require("./src/player/player.class");
 const Board = require('./src/board/board.class')
 const cors = require("cors");
@@ -58,6 +59,7 @@ io.on("connection", (socket) => {
     console.log("Bet");
     const room_created = makeRoom(rooms, 1);
     console.log(room_created);
+    setRoomid(room_created)
     if (room_created) socket.emit("newBetGameCreated", room_created);
   });
 
